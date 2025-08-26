@@ -32,6 +32,28 @@ function switchPlayer() {
   activePlayer = activePlayer === 0 ? 1 : 0;
 }
 
+function resetGame() {
+  playersFinalScores[0] = 0;
+  playersFinalScores[1] = 0;
+  currentScore = 0;
+  activePlayer = 0;
+  playing = true;
+
+  document.getElementById('score--0').textContent = 0;
+  document.getElementById('score--1').textContent = 0;
+  document.getElementById('current--0').textContent = 0;
+  document.getElementById('current--1').textContent = 0;
+
+  player0Element.classList.remove('player--winner');
+  player1Element.classList.remove('player--winner');
+  player0Element.classList.add('player--active');
+  player1Element.classList.remove('player--active');
+
+  diceImageElement.classList.add('hidden');
+  rollButtonElement.classList.remove('hidden');
+  holdButtonElement.classList.remove('hidden');
+}
+
 rollButtonElement.addEventListener('click', function () {
   if (playing) {
     const dice = Math.trunc(Math.random() * 6) + 1;
@@ -71,6 +93,4 @@ holdButtonElement.addEventListener('click', function () {
   }
 });
 
-newGameButtonElement.addEventListener('click', function () {
-  location.reload();
-});
+newGameButtonElement.addEventListener('click', resetGame);

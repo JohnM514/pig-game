@@ -13,6 +13,7 @@ const diceImageElement = document.querySelector('.dice');
 const playersFinalScores = [0, 0];
 let currentScore = 0;
 let activePlayer = 0;
+let playing = true;
 
 //Function that returns the correct dice image
 function selectDiceImage(diceNumber) {
@@ -32,23 +33,44 @@ function switchPlayer() {
 }
 
 rollButtonElement.addEventListener('click', function () {
-  const dice = Math.trunc(Math.random() * 6) + 1;
-  diceImageElement.src = selectDiceImage(dice);
-  diceImageElement.classList.remove('hidden');
+  if (playing) {
+    const dice = Math.trunc(Math.random() * 6) + 1;
+    diceImageElement.src = selectDiceImage(dice);
+    diceImageElement.classList.remove('hidden');
 
-  if (dice !== 1) {
-    currentScore += dice;
-    document.getElementById(`current--${activePlayer}`).textContent =
-      currentScore;
-  } else {
-    switchPlayer();
+    if (dice !== 1) {
+      currentScore += dice;
+      document.getElementById(`current--${activePlayer}`).textContent =
+        currentScore;
+    } else {
+      switchPlayer();
+    }
   }
 });
 
 holdButtonElement.addEventListener('click', function () {
-  playersFinalScores[activePlayer] += currentScore;
-  document.getElementById(`score--${activePlayer}`).textContent =
-    playersFinalScores[activePlayer];
+  if (playing) {
+    playersFinalScores[activePlayer] += currentScore;
+    document.getElementById(`score--${activePlayer}`).textContent =
+      playersFinalScores[activePlayer];
 
-  switchPlayer();
+    if (playersFinalScores[activePlayer] >= 100) {
+      playing = false;
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.add('player--winner');
+      document
+        .querySelector(`.player--${activePlayer}`)
+        .classList.remove('player--active');
+      rollButtonElement.classList.add('hidden');
+      holdButtonElement.classList.add('hidden');
+      diceImageElement.classList.add('hidden');
+    } else {
+      switchPlayer();
+    }
+  }
+});
+
+newGameButtonElement.addEventListener('click', function () {
+  location.reload();
 });
